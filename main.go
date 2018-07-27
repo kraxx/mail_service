@@ -3,14 +3,16 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
+	"github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
 	"net/smtp"
 	"os"
 )
 
-// Environmental variables
+// Globally accessible env struct
+var myEnv = Env{}
+
 type Env struct {
 	myContactEmail   string `env:"MY_CONTACT_EMAIL"`
 	port             string `env:"PORT"`
@@ -19,8 +21,6 @@ type Env struct {
 	defaultSmtpLogin string `env:"DEFAULT_SMTP_LOGIN"`
 	defaultPassword  string `env:"DEFAULT_PASSWORD"`
 }
-
-var myEnv = Env{}
 
 // Struct variables must be capitalized so json.Decoder can access and write to them
 type Email struct {
@@ -42,7 +42,7 @@ func mySendMail(email Email) error {
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
 		"To: " + myEnv.myContactEmail + "\r\n" +
-			"Subject: Message via Portfolio: " + email.Name + "\r\n\r\n" +
+			"Subject: Message via Portfolio: " + email.Name + "\r\n\n" +
 			email.Message + "\r\n",
 	)
 
@@ -59,7 +59,7 @@ func mySendMail(email Email) error {
 
 func sendMailHandler(w http.ResponseWriter, r *http.Request) {
 
-	// For local testing
+	// Allow CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
@@ -108,6 +108,6 @@ func init() {
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/send_mail", sendMailHandler).Methods("POST")
-	log.Printf("Listening and serving or something on port%s", myEnv.port)
+	log.Printf("kraxx mail service listening on port %s", myEnv.port)
 	log.Fatal(http.ListenAndServe(myEnv.port, router))
 }
