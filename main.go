@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv" // sets env variables from .env
+	// "github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
 	"net/smtp"
@@ -91,10 +91,10 @@ func sendMailHandler(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	// Load .env
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	// myEnv = Env{
 	// 	os.Getenv("MY_CONTACT_EMAIL"),
 	// 	":" + os.Getenv("PORT"),
