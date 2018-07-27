@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/smtp"
-	// "os"
+	"os"
 )
 
 // Globally accessible env struct
@@ -95,21 +95,13 @@ func init() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	// myEnv = Env{
-	// 	os.Getenv("MY_CONTACT_EMAIL"),
-	// 	":" + os.Getenv("PORT"),
-	// 	":" + os.Getenv("SMTP_PORT"),
-	// 	os.Getenv("SMTP_HOSTNAME"),
-	// 	os.Getenv("DEFAULT_SMTP_LOGIN"),
-	// 	os.Getenv("DEFAULT_PASSWORD"),
-	// }
 	myEnv = Env{
-		"contact@jchow.club",
-		":8000",
-		":587",
-		"smtp.mailgun.org",
-		"postmaster@jchow.club",
-		"2a612a906abc94054d3530dead0c6509-8889127d-806e569a",
+		os.Getenv("MY_CONTACT_EMAIL"),
+		":" + os.Getenv("PORT"),
+		":" + os.Getenv("SMTP_PORT"),
+		os.Getenv("SMTP_HOSTNAME"),
+		os.Getenv("DEFAULT_SMTP_LOGIN"),
+		os.Getenv("DEFAULT_PASSWORD"),
 	}
 }
 
