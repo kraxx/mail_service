@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	// "github.com/joho/godotenv" // sets env variables from .env
 	"log"
@@ -126,14 +127,12 @@ func mailHandler(mailer MailerFunc) func(http.ResponseWriter, *http.Request) {
 // Load .env
 func init() {
 
-	/*
-		Local
+	//	Local
 
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal(err)
-		}
-	*/
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// Production
 	myEnv = Env{
@@ -147,8 +146,13 @@ func init() {
 	}
 }
 
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "You shouldn't be here go away")
+}
+
 func main() {
 	router := mux.NewRouter()
+	router.HandleFunc("/", indexHandler).Methods("GET")
 	router.HandleFunc("/send_mail", mailHandler(sendKraxxSiteMail)).Methods("POST")
 	router.HandleFunc("/camagru_mail", mailHandler(sendCamagruMail)).Methods("POST")
 	log.Printf("kraxx mail service listening on port %s", myEnv.port)
