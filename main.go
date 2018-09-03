@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv" // sets env variables from .env
+	// "github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
 	"net/smtp"
