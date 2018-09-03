@@ -1,1 +1,1 @@
-web: ./bin/main
+web: go build main.go; ./main
