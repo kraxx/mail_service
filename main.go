@@ -75,7 +75,7 @@ func sendCamagruMail(data FormData) error {
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
 		"To: " + data.Email + "\r\n" +
-			"Camagru - User Verification\r\n\n" +
+			"Camagru - User Verification/Password Reset\r\n\n" +
 			data.Message + "\r\n",
 	)
 
