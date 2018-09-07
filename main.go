@@ -46,9 +46,6 @@ func setupSmtpAuth() smtp.Auth {
 
 func sendKraxxSiteMail(data FormData) error {
 
-	// Set up authentication info
-	auth := setupSmtpAuth()
-
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
 		"To: " + myEnv.myContactEmail + "\r\n" +
@@ -59,7 +56,7 @@ func sendKraxxSiteMail(data FormData) error {
 	// Execute send email
 	err := smtp.SendMail(
 		myEnv.smtpHostname+myEnv.smtpPort, // SMTP address
-		auth,
+		setupSmtpAuth(),
 		data.Email,                     // send from
 		[]string{myEnv.myContactEmail}, // send to
 		message,                        // message body
@@ -68,9 +65,6 @@ func sendKraxxSiteMail(data FormData) error {
 }
 
 func sendCamagruMail(data FormData) error {
-
-	// Set up authentication info
-	auth := setupSmtpAuth()
 
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
@@ -82,7 +76,7 @@ func sendCamagruMail(data FormData) error {
 	// Execute send email
 	err := smtp.SendMail(
 		myEnv.smtpHostname+myEnv.smtpPort, // SMTP address
-		auth,
+		setupSmtpAuth(),
 		myEnv.noReply,        // send from
 		[]string{data.Email}, // send to
 		message,              // message body
@@ -124,6 +118,10 @@ func mailHandler(mailer MailerFunc) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "You shouldn't be here go away")
+}
+
 // Load .env
 func init() {
 
@@ -144,10 +142,6 @@ func init() {
 		os.Getenv("DEFAULT_PASSWORD"),
 		os.Getenv("CAMAGRU_NOREPLY"),
 	}
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "You shouldn't be here go away")
 }
 
 func main() {
