@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/context"
 	"github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
@@ -31,9 +32,6 @@ type FormData struct {
 	Message string `json:"message"`
 }
 
-// Function that takes form data and executes the mail delivery
-type MailerFunc func(FormData) error
-
 // Set up authentication info
 func setupSmtpAuth() smtp.Auth {
 	return smtp.PlainAuth(
@@ -44,7 +42,9 @@ func setupSmtpAuth() smtp.Auth {
 	)
 }
 
-func sendKraxxSiteMail(data FormData) error {
+func sendKraxxSiteMail(w http.ResponseWriter, r *http.Request) {
+
+	data := context.Get(r, "mail_data").(FormData)
 
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
@@ -61,10 +61,17 @@ func sendKraxxSiteMail(data FormData) error {
 		[]string{myEnv.myContactEmail}, // send to
 		message,                        // message body
 	)
-	return err
+	if err != nil {
+		log.Printf("Error sending email: %s", err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	w.WriteHeader(200)
 }
 
-func sendCamagruMail(data FormData) error {
+func sendCamagruMail(w http.ResponseWriter, r *http.Request) {
+
+	data := context.Get(r, "mail_data").(FormData)
 
 	// Headers delimited by newlines, separated from body by empty newline
 	message := []byte(
@@ -81,10 +88,15 @@ func sendCamagruMail(data FormData) error {
 		[]string{data.Email}, // send to
 		message,              // message body
 	)
-	return err
+	if err != nil {
+		log.Printf("Error sending email: %s", err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	w.WriteHeader(200)
 }
 
-func mailHandler(mailer MailerFunc) http.HandlerFunc {
+func mailHandler(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Allow CORS
@@ -105,16 +117,8 @@ func mailHandler(mailer MailerFunc) http.HandlerFunc {
 			http.Error(w, err.Error(), 400)
 			return
 		}
-
-		// Send email
-		err = mailer(data)
-		if err != nil {
-			log.Printf("Error sending email: %s", err.Error())
-			http.Error(w, err.Error(), 400)
-			return
-		}
-
-		w.WriteHeader(200)
+		context.Set(r, "mail_data", data)
+		next(w, r)
 	})
 }
 
@@ -125,12 +129,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 // Load .env
 func init() {
 
-	//	Local
-
 	err := godotenv.Load()
 	if err != nil {
-		// log.Fatal(err)
-		log.Println(err.Error())
+		log.Println("Godotenv error:", err.Error())
 	}
 
 	// Production

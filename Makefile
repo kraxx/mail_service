@@ -1,6 +1,7 @@
 NAME =	mail_service
 
-DEPS =	github.com/gorilla/mux \
+DEPS =	github.com/gorilla/context \
+		github.com/gorilla/mux \
 		github.com/joho/godotenv
 
 OUTPUT_DIR =	./bin/
