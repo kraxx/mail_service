@@ -1,0 +1,17 @@
+{
+	"ImportPath": "github.com/kraxx/mail_service",
+	"GoVersion": "go1.11",
+	"GodepVersion": "v80",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.6.2-3-gcb46983",
+			"Rev": "cb4698366aa625048f3b815af6a0dea8aef9280a"
+		},
+		{
+			"ImportPath": "github.com/joho/godotenv",
+			"Comment": "v1.2.0-12-g1709ab1",
+			"Rev": "1709ab122c988931ad53508747b3c061400c2984"
+		}
+	]
+}
