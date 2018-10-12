@@ -24,7 +24,7 @@ END_COLOUR =		\033[0m
 
 TAG? =	$(shell git rev-list HEAD --max-count=1 --abbrev-commit)
 
-.PHONY: install build serve test clean heroku re # invalidate these commands if they exist outside this script
+.PHONY: install build serve test clean heroku docker re # invalidate these commands if they exist outside this script
 .SILENT: # Prepends everything with @ (command executed without printing to stdout)
 all: install build serve
 install:
@@ -53,6 +53,11 @@ heroku:
 	git push heroku master
 	rm -rf Godeps vendor
 	echo "${GREEN_LIGHT}Removed Godep files because we don't need them${END_COLOUR}"
+docker:
+	echo "${GREEN_LIGHT}Building Docker image on Heroku registry${END_COLOUR}"
+	docker build -t registry.heroku.com/${NAME}/web .
+	echo "${GREEN_LIGHT}Deploying Docker image to Heroku${END_COLOUR}"
+	docker push registry.heroku.com/${NAME}/web
 re: clean all
 # pack:
 #	GOOS=linux make build
