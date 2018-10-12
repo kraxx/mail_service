@@ -24,7 +24,7 @@ END_COLOUR =		\033[0m
 
 TAG? =	$(shell git rev-list HEAD --max-count=1 --abbrev-commit)
 
-.PHONY: install build serve test clean # invalidate these commands if they exist outside this script
+.PHONY: install build serve test clean heroku re # invalidate these commands if they exist outside this script
 .SILENT: # Prepends everything with @ (command executed without printing to stdout)
 all: install build serve
 install:
@@ -43,6 +43,16 @@ clean:
 	echo "${YELLOW_LIGHT_BOLD}Cleaning installations and binary${END_COLOUR}"
 	go clean
 	rm -f ${OUTPUT_BINARY}
+heroku:
+	echo "${GREEN_LIGHT}Setting up Godep files for Heroku${END_COLOUR}"
+	godep save
+	echo "${YELLOW_LIGHT}Git commits before push${END_COLOUR}"
+	git add .
+	git commit -m "Ran \"make heroku\""
+	echo "${YELLOW_LIGHT}Pushing to Heroku${END_COLOUR}"
+	git push heroku master
+	rm -rf Godeps vendor
+	echo "${GREEN_LIGHT}Remove Godep files because we don't need them${END_COLOUR}"
 re: clean all
 # pack:
 #	GOOS=linux make build
