@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	// "github.com/joho/godotenv" // sets env variables from .env
+	"github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
 	"net/smtp"
@@ -84,8 +84,8 @@ func sendCamagruMail(data FormData) error {
 	return err
 }
 
-func mailHandler(mailer MailerFunc) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func mailHandler(mailer MailerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Allow CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -115,7 +115,7 @@ func mailHandler(mailer MailerFunc) func(http.ResponseWriter, *http.Request) {
 		}
 
 		w.WriteHeader(200)
-	}
+	})
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -127,10 +127,11 @@ func init() {
 
 	//	Local
 
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		// log.Fatal(err)
+		log.Println(err.Error())
+	}
 
 	// Production
 	myEnv = Env{
