@@ -1,1 +1,1 @@
-web: sudo apt-get install go && make
+web: apt-get install go && make
