@@ -1,1 +1,1 @@
-web: make
+web: mail_service
