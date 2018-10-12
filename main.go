@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv" // sets env variables from .env
 	"log"
 	"net/http"
@@ -59,7 +59,7 @@ func sendKraxxSiteMail(w http.ResponseWriter, r *http.Request) {
 		setupSmtpAuth(),
 		data.Email,                     // send from
 		[]string{myEnv.myContactEmail}, // send to
-		message,                        // message body
+		message, // message body
 	)
 	if err != nil {
 		log.Printf("Error sending email: %s", err.Error())
@@ -129,6 +129,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 // Load .env
 func init() {
 
+	// Local
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("Godotenv error:", err.Error())
