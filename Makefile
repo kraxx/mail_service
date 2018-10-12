@@ -46,13 +46,13 @@ clean:
 heroku:
 	echo "${GREEN_LIGHT}Setting up Godep files for Heroku${END_COLOUR}"
 	godep save
-	echo "${YELLOW_LIGHT}Git commits before push${END_COLOUR}"
+	echo "${GREEN_LIGHT}Git commits before push${END_COLOUR}"
 	git add .
 	git commit -m "Ran \"make heroku\""
-	echo "${YELLOW_LIGHT}Pushing to Heroku${END_COLOUR}"
+	echo "${GREEN_LIGHT}Pushing to Heroku${END_COLOUR}"
 	git push heroku master
 	rm -rf Godeps vendor
-	echo "${GREEN_LIGHT}Remove Godep files because we don't need them${END_COLOUR}"
+	echo "${GREEN_LIGHT}Removed Godep files because we don't need them${END_COLOUR}"
 re: clean all
 # pack:
 #	GOOS=linux make build
